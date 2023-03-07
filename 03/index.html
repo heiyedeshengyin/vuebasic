@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>03</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" :placeholder="tips">
+    <div>number + 1 = {{ number + 1 }}</div>
+    <div>{{ tips.split('').reverse().join('') }}</div>
+    <div :title="'box' + index">这是一个div</div>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        tips: "请输入用户名",
+        number: 2,
+        index: 3
+    }
+})
+</script>
+</body>
+</html>
