@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>04</title>
+</head>
+<body>
+<div id="app">
+    <p>count的值是{{ count }}</p>
+    <button v-on:click="addOne">+1</button>
+    <button @click="subOne">-1</button>
+    <button @click="add(2)">+2</button>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        count: 0
+    },
+    methods: {
+        addOne: function() {
+            console.log('+1')
+            vm.count += 1
+        },
+        subOne() {
+            console.log('-1')
+            this.count -= 1
+        },
+        add(n) {
+            console.log('+' + n)
+            this.count += n
+        }
+    }
+})
+</script>
+</body>
+</html>
