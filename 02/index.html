@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>02</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" placeholder="{{ tips }}">
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        tips: '请输入用户名'
+    }
+})
+</script>
+</body>
+</html>
