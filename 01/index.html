@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>01</title>
+</head>
+<body>
+<div id="app">
+    <p v-text="username">姓名</p>
+    <p>年龄：{{ age }}</p>
+    <div v-html="info"></div>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        username: 'lala',
+        age: '14',
+        info: '<h4 style="color: red; font-weight: bold;">简介</h4>'
+    }
+})
+</script>
+</body>
+</html>
