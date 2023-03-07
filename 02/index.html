@@ -6,7 +6,9 @@
 </head>
 <body>
 <div id="app">
-    <input type="text" placeholder="{{ tips }}">
+    <input type="text" v-bind:placeholder="tips">
+    <hr />
+    <img :src="image" style="width: 150px;">
 </div>
 
 <script src="../js/vue.js"></script>
@@ -14,7 +16,8 @@
 const vm = new Vue({
     el: '#app',
     data: {
-        tips: '请输入用户名'
+        tips: '请输入用户名',
+        image: 'https://vuejs.bootcss.com/images/logo.png'
     }
 })
 </script>
