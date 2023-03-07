@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>06</title>
+</head>
+<body>
+<div id="app">
+    <a href="https://www.baidu.com" @click.prevent="show">跳转到百度首页</a>
+    <hr />
+    <div style="height: 150px; background-color: orange; padding-left: 100px; line-height: 150px;" @click="divHandler">
+        <button @click.stop="btnHandler">按钮</button>
+    </div>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {},
+    methods: {
+        show() {
+            //event.preventDefault()
+            console.log('点击了链接')
+        },
+        btnHandler() {
+            //event.stopPropagation()
+            console.log('btnHandler')
+        },
+        divHandler() {
+            console.log('divHandler')
+        }
+    }
+})
+</script>
+</body>
+</html>
