@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>10</title>
+</head>
+<body>
+<div id="app">
+    <p v-if="flag">这是被v-if控制的元素</p>
+    <p v-show="flag">这是被v-show控制的元素</p>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        flag: true
+    }
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>11</title>
+</head>
+<body>
+<div id="app">
+    <div v-if="type === 'A'">优秀</div>
+    <div v-else-if="type === 'B'">良好</div>
+    <div v-else-if="type === 'C'">一般</div>
+    <div v-else>差</div>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        type: 'A'
+    }
+})
+</script>
+</body>
+</html>
