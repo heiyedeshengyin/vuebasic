@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>08</title>
+</head>
+<body>
+<div id="app">
+    <p>用户的名字是：{{ username }}</p>
+    <input type="text" v-model="username">
+    <hr />
+    <select v-model="city">
+        <option value="">请选择</option>
+        <option value="1">北京</option>
+        <option value="2">上海</option>
+        <option value="3">广州</option>
+    </select>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        username: 'zhangsan',
+        city: ''
+    }
+})
+</script>
+</body>
+</html>
