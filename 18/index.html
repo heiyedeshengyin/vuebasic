@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>17</title>
+    <title>18</title>
 </head>
 <body>
 <div id="app">
-    <p>message的值是{{ message | f1('a', 'b') | f2 }}</p>
+    <input type="text" v-model="username">
 </div>
 
 <script src="../js/vue.js"></script>
@@ -16,14 +16,11 @@
 const vm = new Vue({
     el: '#app',
     data: {
-        message: 'hello vue.js'
+        username: ''
     },
-    filters: {
-        f1(msg, arg1, arg2) {
-            return msg + arg1 + arg2
-        },
-        f2(msg) {
-            return msg + 'c'
+    watch: {
+        username(newVal, oldVal) {
+            console.log(newVal, oldVal)
         }
     }
 })
