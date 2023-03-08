@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>12</title>
+</head>
+<body>
+<div id="app">
+    <ul>
+        <li v-for="item in list">姓名是：{{ item.name }}</li>
+    </ul>
+    <hr />
+    <table>
+        <thead>
+            <th>索引</th>
+            <th>ID</th>
+            <th>姓名</th>
+        </thead>
+        <tbody>
+            <tr v-for="(item, index) in list" :key="item.id" :title="item.name">
+                <td>{{ index }}</td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    data: {
+        list: [
+            { id: 1, name: 'zhangsan'},
+            { id: 2, name: 'lisi'},
+            { id: 3, name: 'wangwu'}
+        ]
+    }
+})
+</script>
+</body>
+</html>
