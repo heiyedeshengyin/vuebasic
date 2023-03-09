@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>27</title>
+</head>
+<body>
+<div id="app">
+    <Count :init="12"></Count>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const count = {
+    template: `
+        <div>
+            <h5>Count组件</h5>
+            <p>count的值是: {{ count }}</p>
+            <button @click="count++">+1</button>
+        </div>
+    `,
+    props: {
+        init: {
+            default: 1,
+            type: Number,
+            required: true
+        }
+    },
+    data() {
+        return {
+            count: this.init
+        }
+    }
+}
+
+Vue.component('Count', count)
+
+const vm = new Vue({
+    el: '#app'
+})
+</script>
+</body>
+</html>
