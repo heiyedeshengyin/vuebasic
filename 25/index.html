@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25</title>
+
+    <style>
+        .app-container {
+            padding: 1px 20px 20px;
+            background-color: #efefef;
+        }
+
+        .box {
+            display: flex;
+        }
+
+        .left-container {
+            padding: 0 20px 20px;
+            background-color: orange;
+            min-height: 250px;
+            flex: 1;
+        }
+
+        .right-container {
+            padding: 0 20px 20px;
+            background-color: lightskyblue;
+            min-height: 250px;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <App></App>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    el: '#app',
+    components: {
+        App: {
+            template: '<div class="app-container"><h1>APP根组件</h1><hr /><div class="box"><Left></Left><Right></Right></div></div>',
+            components: {
+                Left: {
+                    template: '<div class="left-container"><h3>Left组件</h3></div>'
+                },
+                Right: {
+                    template: '<div class="right-container"><h3>Right组件</h3></div>'
+                }
+            }
+        }
+    }
+})
+</script>
+</body>
+</html>

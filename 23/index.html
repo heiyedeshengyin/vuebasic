@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>23</title>
+
+    <style>
+        .app-container {
+            padding: 1px 20px 20px;
+            background-color: #efefef;
+        }
+
+        .box {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../js/vue.js"></script>
+<script>
+const vm = new Vue({
+    render: h => h({
+        template: '<div class="app-container"><h1>APP根组件</h1><hr /><div class="box"></div></div>'
+    })
+}).$mount('#app')
+</script>
+</body>
+</html>
