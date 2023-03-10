@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>29</title>
+</head>
+<body>
+<div id="app">
+    <demo @my-event="myEvent"></demo>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const demo = {
+    template: `
+        <div>
+            <h5>demo组件</h5>
+            <button @click="click">触发自定义事件</button>
+        </div>
+    `,
+    methods: {
+        click() {
+            this.$emit('my-event', 'lala')
+        }
+    }
+}
+
+Vue.component('demo', demo)
+
+const vm = new Vue({
+    el: '#app',
+    methods: {
+        myEvent(val) {
+            console.log('my-event触发', val)
+        }
+    }
+})
+</script>
+</body>
+</html>
