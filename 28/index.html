@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>28</title>
+    <style>
+        .test-container {
+            background-color: pink;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <button @click="flag = !flag">切换flag</button>
+    <Demo info="你好" v-if="flag"></Demo>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+const demo = {
+    template: `
+        <div class="test-container">
+            <h3>Demo组件</h3>
+            <p>message的值是: {{ message }}</p>
+            <button @click="message += '~'">修改message</button>
+        </div>
+    `,
+    data() {
+        return {
+            message: 'demo'
+        }
+    },
+    props: ['info'],
+    methods: {
+        show() {
+            console.log('调用Demo的show函数')
+        }
+    },
+    // ===== 组件的创建阶段 =====
+    // 当调用new Vue()，或者.vue组件被第一次使用时，或者组件的v-if属性值变为true，会进入组件的创建阶段，以下4个函数会依次执行
+    // 首先，先初始化事件和生命周期，然后调用beforeCreate函数
+    beforeCreate() {
+        // 此时，组件的props/data/methods尚未被创建，都处于不可用的状态
+        // console.log(this.info) // [Vue warn]: Error in beforeCreate hook: "TypeError: Cannot read properties of undefined (reading 'info')"
+        // console.log(this.message) // undefined
+        // this.show() // [Vue warn]: Error in beforeCreate hook: "TypeError: this.show is not a function"
+        console.log('Demo的beforeCreate生命周期函数')
+    },
+    // 调用完beforeCreate函数后，再创建props/data/methods，然后调用created函数
+    created() {
+        // 此时，组件的props/data/methods已创建好，都处于可用的状态，但组件的模板结构尚未生成，不能操作DOM
+        // 实际开发中，经常使用该函数发起ajax请求拿数据
+        console.log('Demo的created生命周期函数')
+        console.log(this.info) // 你好
+        console.log(this.message) // demo
+        this.show()
+        const dom = document.querySelector('.test-container')
+        console.log(dom) // null
+    },
+    // 调用完created函数后，根据el选项和template选项，生成组件的HTML结构到内存中，然后调用beforeMount函数
+    beforeMount() {
+        // 此时，内存中已经存在编译好的HTML结构，但还没有渲染到浏览器中，还不能操作DOM
+        // 该函数也可以发起ajax请求
+        console.log('Demo的beforeMount生命周期函数')
+        const dom = document.querySelector('.test-container')
+        console.log(dom) // null
+        console.log(this.$el) // undefined
+    },
+    // 调用完beforeMount函数后，将内存中的HTML结构渲染到浏览器上，然后调用mounted函数
+    mounted() {
+        // 此时，内存中的HTML结构，已经渲染到浏览器中，可以操作DOM
+        console.log('Demo的mounted生命周期函数')
+        const dom = document.querySelector('.test-container')
+        console.log(dom) // <div class="test-container"></div>
+        console.log(this.$el) // <div class="test-container"></div>
+    },
+    // 调用完beforeMount函数后，组件的创建阶段结束，进入组件的运行阶段
+    // ===== 组件的运行阶段 =====
+    // 每当组件的数据（比如data）发生变化时，会进入组件更新循环，首先去调用beforeUpdate函数
+    beforeUpdate() {
+        // 此时，组件的数据已经发生变化，但还没渲染到浏览器上
+        console.log('Demo的beforeUpdate生命周期函数')
+        console.log(this.message) // demo~
+        const dom = document.querySelector('.test-container p')
+        console.log(dom.innerHTML) // message的值是 demo
+    },
+    // 调用完beforeUpdate函数后，根据最新的数据，重新生成新的DOM结构并渲染到浏览器上，然后调用updated函数
+    updated() {
+        // 此时，组件的DOM已经完成了重新渲染
+        console.log('Demo的updated生命周期函数')
+        console.log(this.message) // demo~
+        const dom = document.querySelector('.test-container p')
+        console.log(dom.innerHTML) // message的值是 demo~
+    },
+    // 调用完updated函数后，组件更新循环结束，等待下一次的数据更新
+    // ===== 组件的销毁阶段 =====
+    // 当调用组件的$destroy()函数，或者组件的v-if属性值变为false，就会进入组件的销毁阶段
+    // 首先组件的DOM结构在浏览器中会被删除，然后调用beforeDestroy函数
+    beforeDestroy() {
+        // 此时，已无法操作组件的DOM结构，但还能获取组件的数据
+        console.log('Demo的beforeDestroy生命周期函数')
+        console.log(this.message) // demo
+        const dom = document.querySelector('.test-container')
+        console.log(dom) // null
+        console.log(this.$el) // <div class="test-container"></div>
+    },
+    // 调用完beforeDestroy函数后，会去销毁组件的数据侦听器，子组件，事件监听，然后调用destroyed函数
+    destroyed() {
+        // 此时，组件已经完全消耗，但组件的实例还存在，还能获取组件的数据
+        console.log('Demo的destroyed生命周期函数')
+        console.log(this.message) // demo
+        const dom = document.querySelector('.test-container')
+        console.log(dom) // null
+        console.log(this.$el) // <div class="test-container"></div>
+    }
+}
+
+Vue.component('Demo', demo)
+
+const vm = new Vue({
+    el: '#app',
+    data: {
+        flag: true
+    }
+})
+</script>
+</body>
+</html>
