@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30</title>
+    <style>
+        .app-container {
+            padding: 1px 20px 20px;
+            background-color: #efefef;
+        }
+
+        .box {
+            display: flex;
+        }
+
+        .left-container {
+            padding: 0 20px 20px;
+            background-color: orange;
+            min-height: 250px;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app"></div>
+
+<script src="../js/vue.js"></script>
+<script>
+const Left = Vue.component('Left', {
+    template: `
+        <div class="left-container">
+            <h3>Left 组件 --- {{ count }}</h3>
+            <button @click="count += 1">+1</button>
+            <button @click="resetCount">重置</button>
+        </div>
+    `,
+    data() {
+        return {
+            count: 0
+        }
+    },
+    methods: {
+        resetCount() {
+            this.count = 0
+        }
+    }
+})
+
+const App = Vue.component('App', {
+    template: `
+        <div class="app-container">
+            <h1 ref="myh1">App根组件</h1>
+            <button @click="showThis">打印</button>
+		    <button @click="leftCountReset">重置Left</button>
+            <hr />
+            <input type="text" v-if="inputVisible" @blur="showButton" ref="inputRef" />
+		    <button v-else @click="showInput">展示输入框</button>
+            <hr />
+            <div class="box">
+                <Left ref="comLeft"></Left>
+            </div>
+        </div>
+    `,
+    data() {
+        return {
+            inputVisible: false
+        }
+    },
+    methods: {
+        showThis() {
+            this.$refs.myh1.style.color = 'red'
+        },
+        showButton() {
+			this.inputVisible = false
+		},
+        showInput() {
+			this.inputVisible = true
+			this.$nextTick(() => {
+                this.$refs.inputRef.focus()
+            })
+		},
+        leftCountReset() {
+            this.$refs.comLeft.count = 0
+        }
+    },
+    component: {
+        Left
+    }
+})
+
+const vm = new Vue({
+    render: h => h(App)
+}).$mount('#app')
+</script>
+</body>
+</html>
