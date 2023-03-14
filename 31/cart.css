@@ -1,0 +1,105 @@
+.app-container {
+    padding-top: 45px;
+    padding-bottom: 50px;
+}
+
+.header-container {
+    font-size: 12px;
+    height: 45px;
+    width: 100%;
+    background-color: #1b7dff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+}
+
+.goods-container {
+    border-top: 1px solid #efefef;
+    padding: 10px;
+    display: flex
+}
+
+.goods-container .thumb {
+    display: flex;
+    align-items: center;
+}
+
+.goods-container .thumb img {
+    width: 100px;
+    height: 100px;
+    margin: 0 10px;
+}
+
+.goods-container .goods-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.goods-container .goods-info .goods-title {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.goods-container .goods-info .goods-info-buttom {
+    display: flex;
+    justify-content: space-between;
+}
+
+.goods-container .goods-info .goods-info-buttom .goods-price {
+    font-weight: bold;
+    color: red;
+    font-size: 13px;
+}
+
+.footer-container {
+    font-size: 12px;
+    height: 50px;
+    width: 100%;
+    border-top: 1px solid #efefef;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+#cbFull {
+    margin-right: 5px;
+}
+
+.btn-settle {
+    height: 80%;
+    min-width: 110px;
+    border-radius: 25px;
+    font-size: 12px;
+}
+
+.total-price {
+    font-weight: bold;
+    font-size: 14px;
+    color: red;
+}
+
+.number-box {
+    min-width: 30px;
+    text-align: center;
+    margin: 0 5px;
+    font-size: 12px;
+}
+
+.btn-sm {
+    width: 30px;
+}
