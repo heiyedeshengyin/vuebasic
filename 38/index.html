@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>38</title>
+    <style>
+        .app-container {
+            background-color: #efefef;
+            overflow: hidden;
+            margin: 10px;
+            padding: 15px;
+        }
+        .app-container > a {
+            margin-right: 10px;
+        }
+        .home-container {
+            min-height: 200px;
+            background-color: pink;
+            padding: 15px;
+        }
+        .about-container {
+            min-height: 200px;
+            background-color: skyblue;
+            padding: 15px;
+        }
+        .about-container > a {
+            margin-right: 10px;
+        }
+        .movie-container {
+            min-height: 200px;
+            background-color: lightsalmon;
+            padding: 15px;
+        }
+        .tab1-container {
+            min-height: 150px;
+            background-color: greenyellow;
+        }
+        .tab2-container {
+            min-height: 150px;
+            background-color: plum;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../js/vue.js"></script>
+<script src="../js/vue-router.js"></script>
+<script>
+const Tab1 = Vue.component('Tab1', {
+    template: `
+        <div class="tab1-container">
+            <h5>Tab1组件</h5>
+        </div>
+    `
+})
+
+const Tab2 = Vue.component('Tab2', {
+    template: `
+        <div class="tab2-container">
+            <h5>Tab2组件</h5>
+        </div>
+    `
+})
+
+const Home = Vue.component('Home', {
+    template: `
+        <div class="home-container">
+            <h3>Home组件</h3>
+        </div>
+    `
+})
+
+const About = Vue.component('About', {
+    template: `
+        <div class="about-container">
+            <h3>About组件</h3>
+            <router-link to="/about/tab1">tab1</router-link>
+            <router-link to="/about/tab2">tab2</router-link>
+            <hr />
+            <router-view></router-view>
+        </div>
+    `
+})
+
+const Movie = Vue.component('Movie', {
+    template: `
+        <div class="movie-container">
+            <h3>Movie组件</h3>
+        </div>
+    `
+})
+
+const App = Vue.component('App', {
+    template: `
+        <div class="app-container">
+            <h1>App2根组件</h1>
+            <router-link to="/home">首页</router-link>
+            <router-link to="/movie">电影</router-link>
+            <router-link to="/about">关于</router-link>
+            <hr />
+            <router-view></router-view>
+        </div>
+    `
+})
+
+const router = new VueRouter({
+    routes: [
+        { path: '/', redirect: '/home' },
+        { path: '/home', component: Home },
+        { path: '/movie', component: Movie },
+        {
+            path: '/about',
+            component: About,
+            //redirect: '/about/tab1',
+            children: [
+                { path: 'tab1', component: Tab1 },
+                { path: 'tab2', component: Tab2 },
+                { path: '', component: Tab1 }
+            ]
+        }
+    ]
+})
+
+new Vue({
+    router,
+    render: h => h(App)
+}).$mount('#app')
+</script>
+</body>
+</html>
