@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>38</title>
+    <title>39</title>
     <link rel="stylesheet" href="../css/bootstrap.css">
     <style>
         :root {
@@ -92,9 +92,16 @@ const About = Vue.component('About', {
 const Movie = Vue.component('Movie', {
     template: `
         <div class="movie-container">
-            <h3>Movie组件</h3>
+            <h3>Movie组件 --- {{ $route.params.mid }} --- {{ mid }} --- {{ $route.query }}</h3>
+            <button @click="showThis">打印 this</button>
         </div>
-    `
+    `,
+    props: ['mid'],
+    methods: {
+        showThis() {
+            console.log(this)
+        }
+    }
 })
 
 const App = Vue.component('App', {
@@ -102,7 +109,9 @@ const App = Vue.component('App', {
         <div class="app-container">
             <h1>App2根组件</h1>
             <router-link to="/home">首页</router-link>
-            <router-link to="/movie">电影</router-link>
+            <router-link to="/movie/1">电影1</router-link>
+            <router-link to="/movie/2?name=zhangsan&age=20">电影2</router-link>
+            <router-link to="/movie/3">电影3</router-link>
             <router-link to="/about">关于</router-link>
             <hr />
             <router-view></router-view>
@@ -114,7 +123,7 @@ const router = new VueRouter({
     routes: [
         { path: '/', redirect: '/home' },
         { path: '/home', component: Home },
-        { path: '/movie', component: Movie },
+        { path: '/movie/:mid', component: Movie, props: true },
         {
             path: '/about',
             component: About,
