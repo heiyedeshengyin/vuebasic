@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>41</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <style>
+        :root {
+            font-size: 12px;
+        }
+        .app-container {
+            background-color: #efefef;
+            overflow: hidden;
+            margin: 10px;
+            padding: 15px;
+        }
+        .app-container > a {
+            margin-right: 10px;
+        }
+        .home-container {
+            min-height: 200px;
+            background-color: pink;
+            padding: 15px;
+        }
+        .about-container {
+            min-height: 200px;
+            background-color: skyblue;
+            padding: 15px;
+        }
+        .about-container > a {
+            margin-right: 10px;
+        }
+        .movie-container {
+            min-height: 200px;
+            background-color: lightsalmon;
+            padding: 15px;
+        }
+        .tab1-container {
+            min-height: 150px;
+            background-color: greenyellow;
+        }
+        .tab2-container {
+            min-height: 150px;
+            background-color: plum;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../js/vue.js"></script>
+<script src="../js/vue-router.js"></script>
+<script>
+const Tab1 = Vue.component('Tab1', {
+    template: `
+        <div class="tab1-container">
+            <h5>Tab1组件</h5>
+        </div>
+    `
+})
+
+const Tab2 = Vue.component('Tab2', {
+    template: `
+        <div class="tab2-container">
+            <h5>Tab2组件</h5>
+        </div>
+    `
+})
+
+const Home = Vue.component('Home', {
+    template: `
+        <div class="home-container">
+            <h3>Home组件</h3>
+            <hr />
+            <button @click="gotoMovie1">跳转到电影1 -- 使用push</button>
+            <button @click="replaceMovie1">跳转到电影1 -- 使用replace</button>
+        </div>
+    `,
+    methods: {
+        gotoMovie1() {
+            // 增加一条历史记录
+            router.push('/movie/1')
+        },
+        replaceMovie1() {
+            // 不会增加历史记录
+            router.replace('/movie/1')
+        }
+    }
+})
+
+const About = Vue.component('About', {
+    template: `
+        <div class="about-container">
+            <h3>About组件</h3>
+            <router-link to="/about/tab1">tab1</router-link>
+            <router-link to="/about/tab2">tab2</router-link>
+            <hr />
+            <router-view></router-view>
+        </div>
+    `
+})
+
+const Movie = Vue.component('Movie', {
+    template: `
+        <div class="movie-container">
+            <h3>Movie组件 --- {{ $route.params.mid }} --- {{ mid }} --- {{ $route.query }}</h3>
+            <button @click="showThis">打印 this</button>
+        </div>
+    `,
+    props: ['mid'],
+    methods: {
+        showThis() {
+            console.log(this)
+        }
+    }
+})
+
+const App = Vue.component('App', {
+    template: `
+        <div class="app-container">
+            <h1>App2根组件</h1>
+            <router-link to="/home">首页</router-link>
+            <router-link to="/movie/1">电影1</router-link>
+            <router-link to="/movie/2?name=zhangsan&age=20">电影2</router-link>
+            <router-link to="/movie/3">电影3</router-link>
+            <router-link to="/about">关于</router-link>
+            <router-link to="/main">去后台</router-link>
+            <router-link to="/main?token=lala">去后台(有token)</router-link>
+            <hr />
+            <button @click="goBack">后退一页</button>
+            <button @click="goForward">前进一页</button>
+            <router-view></router-view>
+        </div>
+    `,
+    methods: {
+        goForward() {
+            // 前进一页
+            //router.go(1)
+            router.forward()
+        },
+        goBack() {
+            // 后退一页
+            //router.go(-1)
+            router.back()
+        }
+    }
+})
+
+const Main = Vue.component('Main', {
+    template: `
+        <div>
+            <h3 v-if="hasToken">Main后台主页,欢迎</h3>
+            <h3 v-else>Main后台主页,未经登录不能进入</h3>
+        </div>
+    `,
+    data() {
+        return {
+            hasToken: false
+        }
+    },
+    created() {
+        console.log('created')
+        this.getToken()
+    },
+    watch: {
+        $route(newVal, oldVal) {
+            console.log('watch')
+            this.getToken()
+        }
+    },
+    methods: {
+        getToken() {
+            if (this.$route.query.token) {
+                this.hasToken = true
+            }
+            else {
+                this.hasToken = false
+            }
+        }
+    }
+})
+
+const Login = Vue.component('Login', {
+    template: `
+        <div>
+            <h3>Login登录页面</h3>
+        </div>
+    `
+})
+
+const router = new VueRouter({
+    routes: [
+        { path: '/', redirect: '/home' },
+        { path: '/home', component: Home },
+        { path: '/movie/:mid', component: Movie, props: true },
+        {
+            path: '/about',
+            component: About,
+            //redirect: '/about/tab1',
+            children: [
+                { path: 'tab1', component: Tab1 },
+                { path: 'tab2', component: Tab2 },
+                { path: '', component: Tab1 }
+            ]
+        },
+        { path: '/main', component: Main },
+        { path: '/login', component: Login }
+    ]
+})
+
+// beforeEach函数，每次跳转时都要调用
+// to --- 跳转到的页面
+// from --- 从哪里跳转
+// next --- 放行函数
+// next() --- 放行
+// next('/main') --- 跳转到/main
+// next(false) --- 不跳转，留在原页面
+router.beforeEach(function(to, from, next) {
+    console.log('to', to)
+    console.log('from', from)
+    if (to.path === '/main') {
+        const token = to.query.token
+        if (token) {
+            next()
+        }
+        else {
+            next('/login')
+        }
+    }
+    else {
+        next()
+    }
+})
+
+new Vue({
+    router,
+    render: h => h(App)
+}).$mount('#app')
+</script>
+</body>
+</html>
