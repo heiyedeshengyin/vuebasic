@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>42</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        .user-container .user-card {
+            background-color: #007bff;
+            color: white;
+            padding-top: 20px;
+        }
+        .user-container .user-card .van-cell {
+            background: #007bff;
+            color: white;
+        }
+        .user-container .user-card .van-cell ::after {
+            display: none;
+        }
+        .user-container .user-card .van-cell .avatar {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-container .user-card .van-cell .username {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .user-container .user-data {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            font-size: 14px;
+            padding: 30px 0;
+        }
+        .user-container .user-data .user-data-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 33.33%;
+        }
+        .article-container .label-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .article-container .thumb {
+            width: 113px;
+            height: 70px;
+            background-color: #f8f8f8;
+            object-fit: cover;
+        }
+        .article-container .title-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .article-container .thumb-box {
+            display: flex;
+            justify-content: space-between;
+        }
+        .home-container .van-nav-bar {
+            background-color: #007bff;
+        }
+        .home-container .van-nav-bar__title {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../js/vue.js"></script>
+<script src="../js/vue-router.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/lodash.js"></script>
+<script src="../js/vant.js"></script>
+<script>
+const getArticleListAPI = function(_page, _limit) {
+    return axios.get('https://www.escook.cn/articles', {
+        params: {
+            _page,
+            _limit
+        }
+    });
+};
+
+const User = Vue.component('User', {
+    name: 'User',
+    template: `
+        <div class="user-container">
+            <div class="user-card">
+            <van-cell>
+                <template #icon>
+                    <img src="../assets/logo.png" alt="" class="avatar">
+                </template>
+                <template #title>
+                    <span class="username">用户名</span>
+                </template>
+                <template #label>
+                    <van-tag color="#fff" text-color="#007bff">申请认证</van-tag>
+                </template>
+            </van-cell>
+            <div class="user-data">
+                <div class="user-data-item">
+                    <span>0</span>
+                    <span>动态</span>
+                </div>
+                <div class="user-data-item">
+                    <span>0</span>
+                    <span>关注</span>
+                </div>
+                <div class="user-data-item">
+                    <span>0</span>
+                    <span>粉丝</span>
+                </div>
+            </div>
+            </div>
+
+            <van-cell-group class="action-card">
+                <van-cell icon="edit" title="编辑资料" is-link />
+                <van-cell icon="chat-o" title="小思同学" is-link />
+                <van-cell icon="warning-o" title="退出登录" is-link />
+            </van-cell-group>
+        </div>
+    `
+});
+
+const ArticleInfo = Vue.component('ArticleInfo', {
+    name: 'ArticleInfo',
+    template: `
+        <div class="article-container">
+            <van-cell>
+                <template #title>
+                    <div class="title-box">
+                        <span>{{ title }}</span>
+                        <img :src="cover.images[0]" alt="" class="thumb" v-if="cover.type === 1">
+                    </div>
+                    <div class="thumb-box" v-if="cover.type === 3">
+                        <img :src="item" alt="" class="thumb" v-for="(item, i) in cover.images" :key="i">
+                    </div>
+                </template>
+                <template #label>
+                    <div class="label-box">
+                        <span>作者 {{ author }} &nbsp;&nbsp; {{ cmtCount }} 评论 &nbsp;&nbsp; 发布日期 {{ time }}</span>
+                        <van-icon name="cross" />
+                    </div>
+                </template>
+            </van-cell>
+        </div>
+    `,
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        author: {
+            type: String,
+            default: ''
+        },
+        cmtCount: {
+            type: [Number, String],
+            default: 0
+        },
+        time: {
+            type: String,
+            default: ''
+        },
+        cover: {
+            type: Object,
+            default: function() {
+                return { type: 0 };
+            }
+        }
+    }
+});
+
+const Home = Vue.component('Home', {
+    name: 'Home',
+    template: `
+        <div class="home-container">
+            <van-nav-bar title="标题" fixed placeholder />
+            <van-pull-refresh v-model="isLoading" :disabled="finished" @refresh="onRefresh">
+                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+                    <ArticleInfo v-for="item in artlist" :key="item.id" :title="item.title" :author="item.aut_name" :cmt-count="item.comm_count" :time="item.pubdate" :cover="item.cover"></ArticleInfo>
+                </van-list>
+            </van-pull-refresh>
+        </div>
+    `,
+    data() {
+        return {
+            page: 1,
+            limit: 10,
+            artlist: [],
+            loading: true,
+            finished: false,
+            isLoading: false
+        };
+    },
+    created() {
+        this.initArticleList();
+    },
+    activated() {
+        fn = this.recordTopHandler();
+        window.addEventListener('scroll', fn);
+        console.log('Home activated');
+    },
+    deactivated() {
+        window.removeEventListener('scroll', fn);
+        console.log('Home deactivated');
+    },
+    methods: {
+        async initArticleList(isRefresh) {
+            const { data: res } = await getArticleListAPI(this.page, this.limit);
+            console.log(res);
+
+            if (isRefresh) {
+                this.artlist = [...res, ...this.artlist];
+                this.isLoading = false;
+            } else {
+                this.artlist = [...this.artlist, ...res];
+                this.loading = false;
+            }
+
+            if (res.length === 0) {
+                this.finished = true;
+            }
+        },
+        onLoad() {
+            console.log('onLoad');
+            this.page++;
+            this.initArticleList();
+        },
+        onRefresh() {
+            console.log('onRefresh');
+            this.page++;
+            this.initArticleList(true);
+        },
+        recordTopHandler() {
+            return _.debounce(
+                () => {
+                    this.$route.meta.top = window.scrollY;
+                    console.log(window.scrollY);
+                },
+                50,
+                { trailing: true }
+            );
+        }
+    },
+    components: {
+        ArticleInfo
+    }
+});
+
+const App = Vue.component('App', {
+    name: 'App',
+    template: `
+        <div>
+            <keep-alive include="Home">
+                <router-view></router-view>
+            </keep-alive>
+
+            <van-tabbar route placeholder>
+                <van-tabbar-item replace icon="home-o" to="/">首页</van-tabbar-item>
+                <van-tabbar-item repalce icon="user-o" to="/user">我的</van-tabbar-item>
+            </van-tabbar>
+        </div>
+    `
+});
+
+const router = new VueRouter({
+    routes: [
+        { path: '/', component: Home, meta: { isRecord: true, top: 0 } },
+        { path: '/user', component: User }
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        } else {
+            return { x: 0, y: to.meta.top || 0 };
+        }
+    }
+});
+
+new Vue({
+    router,
+    render: h => h(App)
+}).$mount('#app');
+</script>
+</body>
+</html>
